@@ -9,21 +9,21 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Hero & Navegacao
 
-- [ ] **HERO-01**: Visitante ve hero section com identidade visual PACIFIQUE! (ilustracoes sketch, tom roxo/malva, tagline "Nao complique, PACIFIQUE!") e credenciais CNJ/TJPE acima do fold
+- [x] **HERO-01**: Visitante ve hero section com identidade visual PACIFIQUE! (ilustracoes sketch, tom roxo/malva, tagline "Nao complique, PACIFIQUE!") e credenciais CNJ/TJPE acima do fold
 - [x] **HERO-02**: Visitante navega entre secoes via menu sticky com smooth scroll
 - [x] **HERO-03**: Visitante em mobile acessa navegacao via hamburger menu
 - [ ] **HERO-04**: Pagina carrega em menos de 2.5s (LCP) com CLS < 0.1
 
 ### Conteudo Institucional
 
-- [ ] **INST-01**: Visitante entende o que a PACIFIQUE! faz atraves de secao "O que fazemos" (Conciliacao, Mediacao, Praticas Restaurativas)
-- [ ] **INST-02**: Visitante identifica sua area de interesse nos 7 Nucleos de Atuacao com icones e descricoes escaneaaveis
-- [ ] **INST-03**: Visitante conhece a equipe fundadora (4 membros) com nome, cargo e bio na secao "Quem Somos"
+- [x] **INST-01**: Visitante entende o que a PACIFIQUE! faz atraves de secao "O que fazemos" (Conciliacao, Mediacao, Praticas Restaurativas)
+- [x] **INST-02**: Visitante identifica sua area de interesse nos 7 Nucleos de Atuacao com icones e descricoes escaneaaveis
+- [x] **INST-03**: Visitante conhece a equipe fundadora (4 membros) com nome, cargo e bio na secao "Quem Somos"
 - [ ] **INST-04**: Visitante ve as fontes normativas (Resolucao 125/2010 CNJ, Resolucao 410/2018 TJPE, Lei de Mediacao) em cards de destaque
 - [ ] **INST-05**: Visitante entende as vantagens do credenciamento TJPE (Encaminhamento Judicial Direto, Credibilidade, Celeridade, Forca Executiva)
 - [ ] **INST-06**: Visitante entende o processo atraves de fluxograma simplificado (Fase Inicial → Fase Procedimental → Resultados)
 - [ ] **INST-07**: Visitante compara mediacao vs litigio tradicional em secao lado a lado (velocidade, custo, resultado, validade juridica)
-- [ ] **INST-08**: Visitante ve badges/selos visuais de credenciamento CNJ e TJPE como elementos de confianca
+- [x] **INST-08**: Visitante ve badges/selos visuais de credenciamento CNJ e TJPE como elementos de confianca
 - [ ] **INST-09**: Visitante encontra respostas para duvidas frequentes em secao FAQ com accordion (5-8 perguntas)
 - [ ] **INST-10**: Footer exibe dados institucionais (CNPJ, endereco Recife/PE, contatos, tagline)
 
@@ -52,7 +52,7 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Responsividade
 
 - [x] **RESP-01**: Layout responsivo mobile-first com breakpoints em 640px, 1024px
-- [ ] **RESP-02**: Cards de nucleos empilham verticalmente em mobile, grid 2-4 colunas em desktop
+- [x] **RESP-02**: Cards de nucleos empilham verticalmente em mobile, grid 2-4 colunas em desktop
 - [ ] **RESP-03**: Fluxograma exibe vertical em mobile, horizontal em desktop
 - [x] **RESP-04**: Sem scroll horizontal em nenhuma resolucao (375px a 1440px)
 
@@ -95,18 +95,18 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| HERO-01 | Phase 1 | Pending |
+| HERO-01 | Phase 1 | Complete |
 | HERO-02 | Phase 1 | Complete |
 | HERO-03 | Phase 1 | Complete |
 | HERO-04 | Phase 3 | Pending |
-| INST-01 | Phase 1 | Pending |
-| INST-02 | Phase 1 | Pending |
-| INST-03 | Phase 1 | Pending |
+| INST-01 | Phase 1 | Complete |
+| INST-02 | Phase 1 | Complete |
+| INST-03 | Phase 1 | Complete |
 | INST-04 | Phase 1 | Pending |
 | INST-05 | Phase 1 | Pending |
 | INST-06 | Phase 1 | Pending |
 | INST-07 | Phase 1 | Pending |
-| INST-08 | Phase 1 | Pending |
+| INST-08 | Phase 1 | Complete |
 | INST-09 | Phase 1 | Pending |
 | INST-10 | Phase 1 | Pending |
 | CONV-01 | Phase 1 | Complete |
@@ -123,7 +123,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | COMP-05 | Phase 3 | Pending |
 | COMP-06 | Phase 3 | Pending |
 | RESP-01 | Phase 1 | Complete |
-| RESP-02 | Phase 1 | Pending |
+| RESP-02 | Phase 1 | Complete |
 | RESP-03 | Phase 1 | Pending |
 | RESP-04 | Phase 1 | Complete |
 

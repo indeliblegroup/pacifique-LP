@@ -4,17 +4,17 @@
 
 **Core Value:** Comunicar credibilidade institucional da PACIFIQUE! (credenciada pelo CNJ e TJPE) e converter visitantes em leads via WhatsApp ou formulario de contato.
 
-**Current Focus:** Executing Phase 1 plans — project scaffolded, design system active, navbar and WhatsApp FAB live.
+**Current Focus:** Executing Phase 1 plans — hero, services, nuclei, and team sections live.
 
 ## Current Position
 
 **Phase:** 1 of 3 - Static Landing Page & WhatsApp Conversion
-**Plan:** 2 of 4 (01-01 complete, next: 01-02)
+**Plan:** 3 of 4 (01-01, 01-02 complete, next: 01-03)
 **Status:** In progress
 
 ```
-Progress: [##........] 8%
-Phase 1:  [##........] 1/4 plans complete
+Progress: [####......] 17%
+Phase 1:  [#####.....] 2/4 plans complete
 Phase 2:  [..........] Not started
 Phase 3:  [..........] Not started
 ```
@@ -24,12 +24,13 @@ Phase 3:  [..........] Not started
 | Metric | Value |
 |--------|-------|
 | Phases completed | 0/3 |
-| Requirements completed | 6/31 |
-| Plans completed | 1/4 (Phase 1) |
+| Requirements completed | 12/31 |
+| Plans completed | 2/4 (Phase 1) |
 
 | Phase | Plan | Duration | Tasks | Files |
 |-------|------|----------|-------|-------|
 | 01 | 01 | 4min | 2 | 24 |
+| 01 | 02 | 3min | 2 | 8 |
 
 ## Accumulated Context
 
@@ -44,6 +45,9 @@ Phase 3:  [..........] Not started
 | Resend + React Email | Transactional email with free tier sufficient for landing page volume |
 | React Hook Form + Zod | Shared validation schema client/server for type-safe form handling |
 | 2-phase content split | Static content ships first with WhatsApp CTA; lead capture second |
+| Icon mapping pattern | Resolve string icon names from constants to Lucide components via Record<string, LucideIcon> |
+| Hero standalone section | Hero uses custom section (not SectionWrapper) for 2-column layout with illustration placeholder |
+| Card variant system | 4 variants (default, nucleus, team, dark) via const object for type-safe selection |
 
 ### Research Insights
 - Static-first architecture: 95% server-rendered HTML, only form + nav need client JS
@@ -64,9 +68,9 @@ Phase 3:  [..........] Not started
 
 ## Session Continuity
 
-**Last session:** 2026-03-04 - Executed 01-01-PLAN.md (project scaffold, design system, navbar, WhatsApp FAB)
-**Stopped at:** Completed 01-01-PLAN.md
-**Next action:** Execute 01-02-PLAN.md (Hero, Services, Nucleos, Team sections)
+**Last session:** 2026-03-04 - Executed 01-02-PLAN.md (Hero, Services, Nucleos, Team sections)
+**Stopped at:** Completed 01-02-PLAN.md
+**Next action:** Execute 01-03-PLAN.md (Fontes Normativas, Vantagens, Como Funciona, Comparativo sections)
 
 ---
 *State initialized: 2026-03-04*
