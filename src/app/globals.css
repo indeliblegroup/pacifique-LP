@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand Colors from CLAUDE.md design system */
+  --color-primary: #4A4458;
+  --color-text-body: #595959;
+  --color-bg-lavender: #F5F3F7;
+  --color-accent-deep: #4A3F5C;
+  --color-accent-deep-text: #FFFFFF;
+  --color-rose-light: #FDE8EC;
+  --color-rose-medium: #F9D5DC;
+  --color-crimson-dark: #7A2048;
+  --color-success: #22C55E;
+  --color-error: #EF4444;
+  --color-border-subtle: #E5E5E5;
+  --color-whatsapp: #25D366;
+
+  /* Font families (CSS variables set by next/font) */
+  --font-heading: var(--font-heading-family), ui-serif, Georgia, serif;
+  --font-body: var(--font-body-family), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Accessibility: Respect motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
