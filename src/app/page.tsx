@@ -5,6 +5,10 @@ import { Hero } from "@/components/sections/hero";
 import { Services } from "@/components/sections/services";
 import { Nuclei } from "@/components/sections/nuclei";
 import { Team } from "@/components/sections/team";
+import { LegalSources } from "@/components/sections/legal-sources";
+import { Advantages } from "@/components/sections/advantages";
+import { ProcessFlow } from "@/components/sections/process-flow";
+import { Comparison } from "@/components/sections/comparison";
 
 export default function Home() {
   return (
@@ -23,47 +27,17 @@ export default function Home() {
         {/* Quem Somos / Team - Plan 02 */}
         <Team />
 
-        {/* Fontes Normativas - will be replaced in Plan 03 */}
-        <SectionWrapper id="fontes-normativas" variant="lavender">
-          <h2 className="font-heading text-3xl font-bold text-primary">
-            Fontes Normativas
-          </h2>
-          <p className="mt-4 text-text-body">
-            Base legal que fundamenta a atuacao da PACIFIQUE!.
-          </p>
-        </SectionWrapper>
+        {/* Fontes Normativas - Plan 03 */}
+        <LegalSources />
 
-        {/* Vantagens - will be replaced in Plan 03 */}
-        <SectionWrapper id="vantagens" variant="white">
-          <h2 className="font-heading text-3xl font-bold text-primary">
-            Vantagens do Credenciamento TJPE
-          </h2>
-          <p className="mt-4 text-text-body">
-            Encaminhamento Judicial Direto, Credibilidade, Celeridade e Forca
-            Executiva.
-          </p>
-        </SectionWrapper>
+        {/* Vantagens do Credenciamento TJPE - Plan 03 */}
+        <Advantages />
 
-        {/* Como Funciona - will be replaced in Plan 03 */}
-        <SectionWrapper id="como-funciona" variant="lavender">
-          <h2 className="font-heading text-3xl font-bold text-primary">
-            Como Funciona
-          </h2>
-          <p className="mt-4 text-text-body">
-            Fase Inicial, Fase Procedimental e Resultados Possiveis.
-          </p>
-        </SectionWrapper>
+        {/* Como Funciona (Process Flowchart) - Plan 03 */}
+        <ProcessFlow />
 
-        {/* Comparativo - will be replaced in Plan 03 */}
-        <SectionWrapper id="comparativo" variant="white">
-          <h2 className="font-heading text-3xl font-bold text-primary">
-            Mediacao vs. Litigio
-          </h2>
-          <p className="mt-4 text-text-body">
-            Compare as vantagens da mediacao frente ao processo judicial
-            tradicional.
-          </p>
-        </SectionWrapper>
+        {/* Comparativo Mediacao vs Litigio - Plan 03 */}
+        <Comparison />
 
         {/* FAQ - will be replaced in Plan 04 */}
         <SectionWrapper id="faq" variant="lavender">
