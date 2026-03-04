@@ -19,10 +19,10 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **INST-01**: Visitante entende o que a PACIFIQUE! faz atraves de secao "O que fazemos" (Conciliacao, Mediacao, Praticas Restaurativas)
 - [x] **INST-02**: Visitante identifica sua area de interesse nos 7 Nucleos de Atuacao com icones e descricoes escaneaaveis
 - [x] **INST-03**: Visitante conhece a equipe fundadora (4 membros) com nome, cargo e bio na secao "Quem Somos"
-- [ ] **INST-04**: Visitante ve as fontes normativas (Resolucao 125/2010 CNJ, Resolucao 410/2018 TJPE, Lei de Mediacao) em cards de destaque
-- [ ] **INST-05**: Visitante entende as vantagens do credenciamento TJPE (Encaminhamento Judicial Direto, Credibilidade, Celeridade, Forca Executiva)
-- [ ] **INST-06**: Visitante entende o processo atraves de fluxograma simplificado (Fase Inicial → Fase Procedimental → Resultados)
-- [ ] **INST-07**: Visitante compara mediacao vs litigio tradicional em secao lado a lado (velocidade, custo, resultado, validade juridica)
+- [x] **INST-04**: Visitante ve as fontes normativas (Resolucao 125/2010 CNJ, Resolucao 410/2018 TJPE, Lei de Mediacao) em cards de destaque
+- [x] **INST-05**: Visitante entende as vantagens do credenciamento TJPE (Encaminhamento Judicial Direto, Credibilidade, Celeridade, Forca Executiva)
+- [x] **INST-06**: Visitante entende o processo atraves de fluxograma simplificado (Fase Inicial → Fase Procedimental → Resultados)
+- [x] **INST-07**: Visitante compara mediacao vs litigio tradicional em secao lado a lado (velocidade, custo, resultado, validade juridica)
 - [x] **INST-08**: Visitante ve badges/selos visuais de credenciamento CNJ e TJPE como elementos de confianca
 - [ ] **INST-09**: Visitante encontra respostas para duvidas frequentes em secao FAQ com accordion (5-8 perguntas)
 - [ ] **INST-10**: Footer exibe dados institucionais (CNPJ, endereco Recife/PE, contatos, tagline)
@@ -53,7 +53,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **RESP-01**: Layout responsivo mobile-first com breakpoints em 640px, 1024px
 - [x] **RESP-02**: Cards de nucleos empilham verticalmente em mobile, grid 2-4 colunas em desktop
-- [ ] **RESP-03**: Fluxograma exibe vertical em mobile, horizontal em desktop
+- [x] **RESP-03**: Fluxograma exibe vertical em mobile, horizontal em desktop
 - [x] **RESP-04**: Sem scroll horizontal em nenhuma resolucao (375px a 1440px)
 
 ## v2 Requirements
@@ -102,10 +102,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | INST-01 | Phase 1 | Complete |
 | INST-02 | Phase 1 | Complete |
 | INST-03 | Phase 1 | Complete |
-| INST-04 | Phase 1 | Pending |
-| INST-05 | Phase 1 | Pending |
-| INST-06 | Phase 1 | Pending |
-| INST-07 | Phase 1 | Pending |
+| INST-04 | Phase 1 | Complete |
+| INST-05 | Phase 1 | Complete |
+| INST-06 | Phase 1 | Complete |
+| INST-07 | Phase 1 | Complete |
 | INST-08 | Phase 1 | Complete |
 | INST-09 | Phase 1 | Pending |
 | INST-10 | Phase 1 | Pending |
@@ -124,7 +124,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | COMP-06 | Phase 3 | Pending |
 | RESP-01 | Phase 1 | Complete |
 | RESP-02 | Phase 1 | Complete |
-| RESP-03 | Phase 1 | Pending |
+| RESP-03 | Phase 1 | Complete |
 | RESP-04 | Phase 1 | Complete |
 
 **Coverage:**
