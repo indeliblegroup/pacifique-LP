@@ -1,59 +1,30 @@
 import { Navbar } from "@/components/navbar";
 import { WhatsAppFab } from "@/components/whatsapp-fab";
 import { SectionWrapper } from "@/components/ui/section-wrapper";
+import { Hero } from "@/components/sections/hero";
+import { Services } from "@/components/sections/services";
+import { Nuclei } from "@/components/sections/nuclei";
+import { Team } from "@/components/sections/team";
 
 export default function Home() {
   return (
     <>
       <Navbar />
       <main className="pt-16">
-        {/* Hero - will be replaced in Plan 02 */}
-        <SectionWrapper id="hero" variant="white">
-          <h1 className="font-heading text-4xl font-bold text-primary md:text-5xl">
-            PACIFIQUE!
-          </h1>
-          <p className="mt-4 text-lg text-text-body">
-            Camara Privada de Conciliacao e Mediacao
-          </p>
-          <p className="mt-2 text-text-body">
-            Credenciada pelo CNJ e TJPE. Nao complique, PACIFIQUE!
-          </p>
-        </SectionWrapper>
+        {/* Hero section - Plan 02 */}
+        <Hero />
 
-        {/* Sobre / O que fazemos - will be replaced in Plan 02 */}
-        <SectionWrapper id="sobre" variant="lavender">
-          <h2 className="font-heading text-3xl font-bold text-primary">
-            O que Fazemos
-          </h2>
-          <p className="mt-4 text-text-body">
-            Conciliacao, Mediacao e Praticas Restaurativas para a resolucao
-            pacifica de conflitos.
-          </p>
-        </SectionWrapper>
+        {/* O que fazemos / Services - Plan 02 */}
+        <Services />
 
-        {/* Nucleos de Atuacao - will be replaced in Plan 02 */}
-        <SectionWrapper id="nucleos" variant="white">
-          <h2 className="font-heading text-3xl font-bold text-primary">
-            Nucleos de Atuacao
-          </h2>
-          <p className="mt-4 text-text-body">
-            7 nucleos especializados para atender diferentes areas do direito.
-          </p>
-        </SectionWrapper>
+        {/* Nucleos de Atuacao - Plan 02 */}
+        <Nuclei />
 
-        {/* Equipe - will be replaced in Plan 02 */}
-        <SectionWrapper id="equipe" variant="lavender">
-          <h2 className="font-heading text-3xl font-bold text-primary">
-            Quem Somos
-          </h2>
-          <p className="mt-4 text-text-body">
-            Equipe fundadora da PACIFIQUE! com experiencia em resolucao de
-            conflitos.
-          </p>
-        </SectionWrapper>
+        {/* Quem Somos / Team - Plan 02 */}
+        <Team />
 
         {/* Fontes Normativas - will be replaced in Plan 03 */}
-        <SectionWrapper id="fontes-normativas" variant="white">
+        <SectionWrapper id="fontes-normativas" variant="lavender">
           <h2 className="font-heading text-3xl font-bold text-primary">
             Fontes Normativas
           </h2>
@@ -63,7 +34,7 @@ export default function Home() {
         </SectionWrapper>
 
         {/* Vantagens - will be replaced in Plan 03 */}
-        <SectionWrapper id="vantagens" variant="lavender">
+        <SectionWrapper id="vantagens" variant="white">
           <h2 className="font-heading text-3xl font-bold text-primary">
             Vantagens do Credenciamento TJPE
           </h2>
@@ -74,7 +45,7 @@ export default function Home() {
         </SectionWrapper>
 
         {/* Como Funciona - will be replaced in Plan 03 */}
-        <SectionWrapper id="como-funciona" variant="white">
+        <SectionWrapper id="como-funciona" variant="lavender">
           <h2 className="font-heading text-3xl font-bold text-primary">
             Como Funciona
           </h2>
@@ -84,7 +55,7 @@ export default function Home() {
         </SectionWrapper>
 
         {/* Comparativo - will be replaced in Plan 03 */}
-        <SectionWrapper id="comparativo" variant="lavender">
+        <SectionWrapper id="comparativo" variant="white">
           <h2 className="font-heading text-3xl font-bold text-primary">
             Mediacao vs. Litigio
           </h2>
@@ -95,7 +66,7 @@ export default function Home() {
         </SectionWrapper>
 
         {/* FAQ - will be replaced in Plan 04 */}
-        <SectionWrapper id="faq" variant="white">
+        <SectionWrapper id="faq" variant="lavender">
           <h2 className="font-heading text-3xl font-bold text-primary">
             Perguntas Frequentes
           </h2>
@@ -105,7 +76,7 @@ export default function Home() {
         </SectionWrapper>
 
         {/* Contato / Footer - will be replaced in Plan 04 */}
-        <SectionWrapper id="contato" variant="lavender">
+        <SectionWrapper id="contato" variant="white">
           <h2 className="font-heading text-3xl font-bold text-primary">
             Contato
           </h2>
