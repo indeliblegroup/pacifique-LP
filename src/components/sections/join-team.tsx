@@ -1,13 +1,20 @@
 import { Mail, CheckCircle, GraduationCap, FileCheck } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { RECRUITMENT_EMAIL } from "@/lib/constants";
 import { SectionWrapper } from "@/components/ui/section-wrapper";
 import { Card } from "@/components/ui/card";
 import { IconCircle } from "@/components/ui/icon-circle";
 
+interface Requirement {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+}
+
 export function JoinTeam() {
   const mailtoLink = `mailto:${RECRUITMENT_EMAIL}?subject=Candidatura - Mediador/Conciliador PACIFIQUE!&body=Prezados,%0D%0A%0D%0AGostaria de me candidatar para integrar o corpo de mediadores/conciliadores da PACIFIQUE!.%0D%0A%0D%0ASegue meu currículo em anexo.%0D%0A%0D%0AAtenciosamente,`;
 
-  const requirements = [
+  const requirements: Requirement[] = [
     {
       icon: GraduationCap,
       title: "Formacao Academica",
@@ -54,15 +61,22 @@ export function JoinTeam() {
           Requisitos para Integracao
         </h3>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {requirements.map((req) => (
-            <Card key={req.title} variant="nucleus">
-              <IconCircle icon={req.icon} />
-              <h4 className="mt-4 font-heading text-lg font-semibold text-primary">
-                {req.title}
-              </h4>
-              <p className="mt-2 text-sm text-text-body">{req.description}</p>
-            </Card>
-          ))}
+          {requirements.map((req) => {
+            const Icon = req.icon;
+            return (
+              <Card key={req.title} variant="nucleus">
+                <div className="mb-3">
+                  <IconCircle>
+                    <Icon className="h-6 w-6" />
+                  </IconCircle>
+                </div>
+                <h4 className="mt-4 font-heading text-lg font-semibold text-primary">
+                  {req.title}
+                </h4>
+                <p className="mt-2 text-sm text-text-body">{req.description}</p>
+              </Card>
+            );
+          })}
         </div>
       </div>
 
