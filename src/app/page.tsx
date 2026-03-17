@@ -3,7 +3,7 @@ import { WhatsAppFab } from "@/components/whatsapp-fab";
 import { Hero } from "@/components/sections/hero";
 import { Services } from "@/components/sections/services";
 import { Nuclei } from "@/components/sections/nuclei";
-import { Team } from "@/components/sections/team";
+import { JoinTeam } from "@/components/sections/join-team";
 import { LegalSources } from "@/components/sections/legal-sources";
 import { Advantages } from "@/components/sections/advantages";
 import { ProcessFlow } from "@/components/sections/process-flow";
@@ -19,7 +19,7 @@ export default function Home() {
         <Hero />
         <Services />
         <Nuclei />
-        <Team />
+        <JoinTeam />
         <LegalSources />
         <Advantages />
         <ProcessFlow />

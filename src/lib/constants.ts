@@ -26,18 +26,20 @@ export interface FaqItem {
   answer: string;
 }
 
-// --- WhatsApp ---
+// --- Contact Information ---
 
 export const WHATSAPP_NUMBER = "5581987900892";
 export const WHATSAPP_MESSAGE =
   "Ola! Gostaria de saber mais sobre os servicos da PACIFIQUE!";
+export const RECRUITMENT_EMAIL = "ouvidoria@pacifique.com.br";
 
 // --- Navigation ---
 
 export const NAV_ITEMS: NavItem[] = [
   { label: "Sobre", href: "#sobre" },
   { label: "Nucleos", href: "#nucleos" },
-  { label: "Equipe", href: "#equipe" },
+  { label: "Equipe", href: "/equipe" },
+  { label: "Seja um Mediador", href: "#seja-mediador" },
   { label: "Fontes Normativas", href: "#fontes-normativas" },
   { label: "Vantagens", href: "#vantagens" },
   { label: "Como Funciona", href: "#como-funciona" },
@@ -52,6 +54,7 @@ export const SECTION_IDS = {
   sobre: "sobre",
   nucleos: "nucleos",
   equipe: "equipe",
+  sejaMediador: "seja-mediador",
   fontesNormativas: "fontes-normativas",
   vantagens: "vantagens",
   comoFunciona: "como-funciona",

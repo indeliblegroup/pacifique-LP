@@ -1,43 +1,131 @@
-# PACIFIQUE! — Projeto Web
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Visao Geral
 
-**PACIFIQUE!** e uma Camara Privada de Conciliacao e Mediacao sediada em Recife-PE.
-CNPJ: 65.218.388/0001-47
+**PACIFIQUE!** e uma Camara Privada de Conciliacao e Mediacao sediada em Recife-PE (CNPJ: 65.218.388/0001-47).
 
-**Missao:** Resolucao pacifica de conflitos com excelencia, seguranca juridica e celeridade.
-
-**Base legal:**
-- Resolucao n. 125/2010 do CNJ — Politica Judiciaria Nacional de tratamento adequado dos conflitos
-- Resolucao n. 410/2018 do TJPE — Credenciamento e fiscalizacao de camaras privadas em Pernambuco
-- Lei n. 13.140/2015 — Lei de Mediacao
-- CPC/2015 (Lei n. 13.105/2015), art. 3, par. 2 e 3 — Autocomposicao como principio fundamental
-
----
-
-## Escopo do Software
-
-Website publico e landing page para apresentacao institucional da PACIFIQUE!, incluindo:
-
-- Hero section com proposta de valor
-- Quem Somos (equipe fundadora)
-- Fontes Normativas (base legal)
-- Nucleos de Atuacao (7 areas tematicas)
-- Fluxograma de Atividades (fase inicial + fase procedimental)
-- Resultados Possiveis (acordo homologado / termo negativo)
-- Vantagens do Credenciamento junto ao TJPE
-- Nucleo de Prestacao de Contas
-- Tabela de Honorarios
-- Informacoes de contato
+Este repositorio contem o website institucional e landing page da PACIFIQUE!, construido como uma aplicacao Next.js estatica (single-page) com foco em conversao via WhatsApp.
 
 ---
 
 ## Stack Tecnica
 
-- **Linguagem:** TypeScript
+- **Framework:** Next.js 16.1.6 (App Router)
 - **Runtime:** Node.js
-- **Framework:** A definir
-- **Gerenciador de pacotes:** A definir
+- **Linguagem:** TypeScript 5
+- **Styling:** Tailwind CSS 4 (usando @theme syntax)
+- **Gerenciador de pacotes:** pnpm
+- **Icones:** lucide-react
+- **Fonts:** next/font (Inter + Merriweather)
+
+---
+
+## Comandos Principais
+
+```bash
+# Desenvolvimento local (porta 3000)
+pnpm dev
+
+# Build de producao (gera static export)
+pnpm build
+
+# Rodar producao localmente
+pnpm start
+
+# Lint
+pnpm lint
+```
+
+---
+
+## Arquitetura
+
+### Estrutura de Diretorios
+
+```
+src/
+├── app/                    # Next.js App Router
+│   ├── layout.tsx          # Root layout (fonts, metadata, HTML lang)
+│   ├── page.tsx            # Home page (single-page landing)
+│   ├── globals.css         # Tailwind config + design tokens
+│   └── not-found.tsx       # 404 page
+├── components/
+│   ├── navbar.tsx          # Top navigation (sticky)
+│   ├── whatsapp-fab.tsx    # Floating action button (WhatsApp CTA)
+│   ├── sections/           # Full-width page sections
+│   │   ├── hero.tsx
+│   │   ├── services.tsx
+│   │   ├── nuclei.tsx
+│   │   ├── team.tsx
+│   │   ├── legal-sources.tsx
+│   │   ├── advantages.tsx
+│   │   ├── process-flow.tsx
+│   │   ├── comparison.tsx
+│   │   ├── faq.tsx
+│   │   └── footer.tsx
+│   └── ui/                 # Reusable UI primitives
+│       ├── section-wrapper.tsx
+│       ├── card.tsx
+│       ├── badge.tsx
+│       └── icon-circle.tsx
+└── lib/
+    └── constants.ts        # All content data, navigation, nuclei, team, FAQ
+```
+
+### Design Tokens (Tailwind @theme)
+
+Cores da marca definidas em `src/app/globals.css`:
+- `primary` (#4A4458) — headings, brand text
+- `text-body` (#595959) — body text
+- `bg-lavender` (#F5F3F7) — alternating section backgrounds
+- `accent-deep` (#4A3F5C) — dark cards (legal sources)
+- `rose-light` / `rose-medium` — nucleus cards
+- `crimson-dark` (#7A2048) — icon circles
+- `success` / `error` — comparison indicators
+- `whatsapp` (#25D366) — WhatsApp FAB
+
+Fontes:
+- `font-heading` — Merriweather (serif, pesos 400/700)
+- `font-body` — Inter (sans-serif)
+
+### Path Aliases
+
+`@/*` → `src/*` (configurado em tsconfig.json)
+
+---
+
+## Padroes de Codigo
+
+### Componentes de Secao
+
+Cada secao da landing page e um componente React em `src/components/sections/`:
+- Encapsulado em `<SectionWrapper>` (gerencia padding, max-width, alternating backgrounds)
+- Usa dados de `src/lib/constants.ts`
+- IDs de secao correspondem aos links do navbar (ex: `#nucleos`, `#equipe`)
+
+### Dados Estruturados
+
+Todo conteudo textual (nucleos, equipe, FAQ, navegacao) esta centralizado em `src/lib/constants.ts`:
+- `NAV_ITEMS` — links do navbar
+- `NUCLEI_DATA` — 7 nucleos de atuacao (titulo, descricao, icone lucide)
+- `TEAM_DATA` — 4 membros fundadores
+- `FAQ_DATA` — 8 perguntas frequentes
+- `WHATSAPP_NUMBER` / `WHATSAPP_MESSAGE` — CTA do WhatsApp
+
+### Responsividade
+
+- **Mobile-first:** Layouts em coluna unica (`flex-col`), expandem para grid em `md:` e `lg:`
+- **Breakpoints:** Tailwind defaults (sm: 640px, md: 768px, lg: 1024px, xl: 1280px)
+- **Navbar:** Hamburger menu em mobile (a implementar), horizontal em desktop
+
+### Acessibilidade
+
+- **Semantica HTML:** Uso correto de `<main>`, `<section>`, `<nav>`, `<h1>`-`<h3>`
+- **Landmarks:** Cada secao tem `id` para navegacao por ancoras
+- **Focus management:** Botoes e links com estados `:hover`, `:focus-visible`
+- **Reduced motion:** Media query em `globals.css` desabilita animacoes para usuarios com `prefers-reduced-motion`
 
 ---
 
@@ -128,80 +216,85 @@ Website publico e landing page para apresentacao institucional da PACIFIQUE!, in
 
 ---
 
-## Diretrizes de Desenvolvimento
+## Convencoes de Desenvolvimento
 
-> Secao a ser expandida conforme o projeto evolui.
-
-### Comandos
-```bash
-# A definir apos setup do projeto
-# npm run dev / npm run build / npm run test
-```
-
-### Convencoes
-- Codigo e commits em ingles
-- Conteudo do site (copy) em portugues (pt-BR)
-- Componentes reutilizaveis seguindo design system acima
-- Mobile-first responsive design
+- **Codigo e commits:** Ingles
+- **Conteudo do site (copy):** Portugues brasileiro (pt-BR)
+- **Nomenclatura de componentes:** PascalCase para componentes, kebab-case para arquivos de secoes
+- **Tipos:** Exportados de `src/lib/constants.ts` quando compartilhados
+- **Lucide icons:** Passados como string no formato `"IconName"` nos dados, resolvidos dinamicamente via `lucide-react`
 
 ---
 
-## Conformidade
+## Requisitos de Conformidade
 
 ### LGPD (Lei n. 13.709/2018)
-- Qualquer funcionalidade que colete ou processe dados pessoais **deve** estar em conformidade com a LGPD
-- Consentimento explicito para coleta de dados
-- Politica de privacidade acessivel em todas as paginas
-- Dados coletados devem ter finalidade especifica e declarada
-- Prever mecanismo para exercicio dos direitos dos titulares (acesso, correcao, exclusao)
+Qualquer funcionalidade que colete dados pessoais deve:
+- Obter consentimento explicito
+- Ter politica de privacidade acessivel
+- Declarar finalidade especifica de coleta
+- Permitir acesso, correcao e exclusao de dados pelo titular
 
-### Acessibilidade
-- Seguir WCAG 2.1 nivel AA como meta minima
-- Textos com contraste adequado sobre todos os backgrounds da paleta
+### Acessibilidade (WCAG 2.1 AA)
+- Contraste minimo de 4.5:1 para texto normal, 3:1 para texto grande
+- Navegacao por teclado funcional (Tab, Enter, Esc)
+- Textos alternativos para imagens/icones decorativos
+- Headings hierarquicos (`<h1>` → `<h2>` → `<h3>`)
 
 ---
 
-## Diretrizes de UX/UI
+## Contexto do Projeto
 
-### Principios Gerais
-- **Mobile-first:** Projetar para telas pequenas primeiro, expandir para desktop
-- **Clareza > Decoracao:** Cada elemento visual deve servir a um proposito funcional
-- **Confianca institucional:** O design deve transmitir credibilidade juridica e seriedade sem ser intimidador
-- **Acessibilidade nativa:** Semantica HTML correta (headings hierarquicos, landmarks, alt text, focus management)
+### Missao da PACIFIQUE!
+Resolucao pacifica de conflitos com excelencia, seguranca juridica e celeridade.
+
+### Base Legal
+- Resolucao n. 125/2010 do CNJ — Politica Nacional de conflitos
+- Resolucao n. 410/2018 do TJPE — Credenciamento de camaras privadas (PE)
+- Lei n. 13.140/2015 — Lei de Mediacao
+- CPC/2015, art. 3, par. 2 e 3 — Autocomposicao
+
+### Nucleos de Atuacao (7 areas)
+1. Consumidor Aereo
+2. Consumidor Bancario
+3. Direito de Saude
+4. Direito de Familia
+5. Direito de Sucessoes
+6. Praticas Restaurativas
+7. Demandas Empresariais Estrategicas
+
+### Equipe Fundadora
+- Carlos Henrique Borges de Melo (Diretor Presidente)
+- Amanda Ledo (Conciliadora Responsavel)
+- Rui Manuel Costa (Diretor de Operacoes)
+- Icaro Sampaio (Diretor de Tecnologia)
+
+---
+
+## Diretrizes de Design
+
+### Principios
+- **Mobile-first:** Layout em coluna unica por padrao, expande para grid em `md:` / `lg:`
+- **Clareza > Decoracao:** Cada elemento visual serve a um proposito funcional
+- **Tom institucional:** Credibilidade juridica + acolhimento (nao intimidador)
 
 ### Layout
-- **Max-width do conteudo:** ~1200px centralizado
-- **Secoes em blocos cheios:** Alternancia de fundo branco (`bg-white`) e lavanda (`bg-lavender`) para separacao visual
-- **Grid:** 1 coluna em mobile, 2-4 colunas em desktop para cards e equipe
-- **Espacamento vertical generoso:** Minimo 64px entre secoes principais
+- **Max-width:** ~1200px centralizado via `SectionWrapper`
+- **Background alternado:** Secoes com `bg-white` e `bg-lavender` (zebra pattern)
+- **Espacamento vertical:** Minimo 64px entre secoes (`py-16` ou superior)
 
-### Interacao
-- **Botoes:** Outlined por padrao, hover com preenchimento suave na cor primary
-- **Links:** Cor primary com underline no hover
-- **Transicoes:** Suaves (200-300ms ease), sem animacoes excessivas
-- **Scroll:** Suave entre secoes (smooth scroll para ancoras internas)
-- **Estados:** Todos os elementos interativos devem ter estilos visiveis para hover, focus e active
+### Componentes Visuais
+- **Icone circular:** `IconCircle` com fundo `crimson-dark` (usado em nucleos)
+- **Cards:** Bordas sutis, backgrounds suaves (lavanda ou rose), cantos arredondados
+- **Botoes:** Outlined com borda `primary`, hover com preenchimento suave
+- **Setas de fluxo:** Gradiente rose → mauve (usado em process-flow)
 
-### Responsividade
-- **Breakpoints sugeridos:**
-  - Mobile: < 640px
-  - Tablet: 640px - 1024px
-  - Desktop: > 1024px
-- **Navegacao:** Hamburger menu em mobile, nav horizontal em desktop
-- **Tabelas (honorarios):** Converter para cards empilhados em mobile
-- **Imagens/ilustracoes:** Escalar proporcionalmente, nunca distorcer
-
-### Hierarquia de Informacao
-- **Hero:** Proposta de valor em ate 2 linhas + CTAs principais (Conciliacao / Mediacao / Praticas Restaurativas)
-- **Nucleos:** Cards escaneeaveis — usuario deve entender cada nucleo em 3 segundos
-- **Fluxograma:** Leitura linear da esquerda para direita (desktop) ou de cima para baixo (mobile)
-- **Honorarios:** Tabela clara com valores destacados, observacoes em texto menor abaixo
-- **Contato:** Sempre acessivel (footer fixo ou CTA flutuante)
+### Interacoes
+- **Transicoes:** 200-300ms ease, sem animacoes excessivas
+- **Scroll:** `scroll-smooth` habilitado no `<html>`
+- **Estados:** Hover, focus-visible e active visiveis em todos elementos interativos
 
 ### Performance
-- **Core Web Vitals como meta:**
-  - LCP < 2.5s
-  - FID < 100ms
-  - CLS < 0.1
-- **Imagens:** Formatos modernos (WebP/AVIF), lazy loading para abaixo do fold
-- **Fontes:** Preload das fontes principais, font-display: swap
+- **Core Web Vitals:** LCP < 2.5s, FID < 100ms, CLS < 0.1
+- **Imagens:** Usar `next/image` com WebP/AVIF, lazy loading abaixo do fold
+- **Fontes:** `next/font` com `display: swap` (ja configurado)
