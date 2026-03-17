@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
+import Link from "next/link";
 import { NAV_ITEMS } from "@/lib/constants";
 
 export function Navbar() {
@@ -20,9 +21,12 @@ export function Navbar() {
       { rootMargin: "-80px 0px -70% 0px", threshold: 0 }
     );
 
+    // Only observe anchor links (starting with #), not full routes
     NAV_ITEMS.forEach(({ href }) => {
-      const el = document.querySelector(href);
-      if (el) observer.observe(el);
+      if (href.startsWith("#")) {
+        const el = document.querySelector(href);
+        if (el) observer.observe(el);
+      }
     });
 
     return () => observer.disconnect();
@@ -39,23 +43,31 @@ export function Navbar() {
         {/* Desktop nav */}
         <nav className="hidden lg:flex lg:items-center lg:gap-1">
           {NAV_ITEMS.map((item) => {
-            const sectionId = item.href.replace("#", "");
-            const isActive = activeSection === sectionId;
+            const isAnchor = item.href.startsWith("#");
+            const sectionId = isAnchor ? item.href.replace("#", "") : "";
+            const isActive = isAnchor && activeSection === sectionId;
+
+            const linkClass = `rounded-md px-3 py-2 text-sm transition-colors ${
+              isActive
+                ? "font-semibold text-primary"
+                : "text-text-body hover:text-primary"
+            }`;
+
+            if (isAnchor) {
+              return (
+                <a key={item.href} href={item.href} className={linkClass}>
+                  {item.label}
+                  {isActive && (
+                    <span className="mt-0.5 block h-0.5 rounded-full bg-primary" />
+                  )}
+                </a>
+              );
+            }
+
             return (
-              <a
-                key={item.href}
-                href={item.href}
-                className={`rounded-md px-3 py-2 text-sm transition-colors ${
-                  isActive
-                    ? "font-semibold text-primary"
-                    : "text-text-body hover:text-primary"
-                }`}
-              >
+              <Link key={item.href} href={item.href} className={linkClass}>
                 {item.label}
-                {isActive && (
-                  <span className="mt-0.5 block h-0.5 rounded-full bg-primary" />
-                )}
-              </a>
+              </Link>
             );
           })}
         </nav>
@@ -80,21 +92,38 @@ export function Navbar() {
       {mobileMenuOpen && (
         <nav className="border-t border-border-subtle bg-white py-2 lg:hidden">
           {NAV_ITEMS.map((item) => {
-            const sectionId = item.href.replace("#", "");
-            const isActive = activeSection === sectionId;
+            const isAnchor = item.href.startsWith("#");
+            const sectionId = isAnchor ? item.href.replace("#", "") : "";
+            const isActive = isAnchor && activeSection === sectionId;
+
+            const linkClass = `block px-4 py-3 text-sm transition-colors ${
+              isActive
+                ? "bg-bg-lavender font-semibold text-primary"
+                : "text-text-body hover:text-primary"
+            }`;
+
+            if (isAnchor) {
+              return (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={linkClass}
+                >
+                  {item.label}
+                </a>
+              );
+            }
+
             return (
-              <a
+              <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className={`block px-4 py-3 text-sm transition-colors ${
-                  isActive
-                    ? "bg-bg-lavender font-semibold text-primary"
-                    : "text-text-body hover:text-primary"
-                }`}
+                className={linkClass}
               >
                 {item.label}
-              </a>
+              </Link>
             );
           })}
         </nav>
