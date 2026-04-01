@@ -1,0 +1,340 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ================================
+// ENUMS
+// ================================
+
+enum UserRole {
+  ADMIN
+  LAWYER
+  CONCILIATOR
+}
+
+enum UserStatus {
+  INVITED
+  ACTIVE
+  INACTIVE
+}
+
+enum CaseStatus {
+  DRAFT
+  INVITE_SENT
+  INVITE_ACCEPTED
+  INTERVIEW_PHASE
+  SESSION_SCHEDULED
+  IN_MEDIATION
+  AGREEMENT_REACHED
+  NEGATIVE_TERM
+  CLOSED
+  ARCHIVED
+}
+
+enum CaseNucleus {
+  CONSUMIDOR_AEREO
+  CONSUMIDOR_BANCARIO
+  DIREITO_SAUDE
+  DIREITO_FAMILIA
+  DIREITO_SUCESSOES
+  PRATICAS_RESTAURATIVAS
+  DEMANDAS_EMPRESARIAIS
+}
+
+enum DocumentType {
+  CARTA_CONVITE
+  TERMO_ACORDO
+  TERMO_NEGATIVO
+  PROCURACAO
+  RG
+  CPF
+  COMPROVANTE_RESIDENCIA
+  OUTROS
+}
+
+enum EmailStatus {
+  DRAFT
+  SENT
+  DELIVERED
+  OPENED
+  FAILED
+}
+
+enum ActivityType {
+  CASE_CREATED
+  CASE_UPDATED
+  CASE_STATUS_CHANGED
+  CASE_ASSIGNED
+  DOCUMENT_UPLOADED
+  EMAIL_SENT
+  USER_CREATED
+  USER_UPDATED
+  MEDIATION_SESSION_SCHEDULED
+  SESSION_SCHEDULED
+  SESSION_UPDATED
+  SESSION_COMPLETED
+  SESSION_CANCELLED
+  SESSION_RESCHEDULED
+  SESSION_DELETED
+  NOTE_ADDED
+}
+
+enum PartyType {
+  REQUESTING
+  REQUESTED
+}
+
+enum MediationSessionType {
+  JOINT
+  INDIVIDUAL_REQUESTING
+  INDIVIDUAL_REQUESTED
+}
+
+enum SessionStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+  RESCHEDULED
+}
+
+// ================================
+// MODELS
+// ================================
+
+model User {
+  id            String      @id @default(cuid())
+  email         String      @unique
+  name          String
+  role          UserRole
+  status        UserStatus  @default(INVITED)
+  passwordHash  String?
+  phone         String?
+
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  lastLoginAt   DateTime?
+
+  // Relations
+  assignedCases Case[]              @relation("AssignedCases")
+  createdCases  Case[]              @relation("CreatedCases")
+  documents     Document[]
+  emailsSent    Email[]
+  activities    Activity[]
+  sessions      Session[]
+  conductedMediationSessions MediationSession[]
+
+  @@index([email])
+  @@index([role])
+  @@index([status])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Case {
+  id              String        @id @default(cuid())
+  caseNumber      String        @unique
+  title           String
+  description     String?
+  nucleus         CaseNucleus
+  status          CaseStatus    @default(DRAFT)
+
+  // Parties (simplified - names stored here, full Party model for extended info)
+  requestingParty String
+  requestedParty  String
+
+  // Assignment
+  assignedToId    String?
+  assignedTo      User?         @relation("AssignedCases", fields: [assignedToId], references: [id])
+
+  // Creator
+  createdById     String
+  createdBy       User          @relation("CreatedCases", fields: [createdById], references: [id])
+
+  // Timestamps
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  closedAt        DateTime?
+
+  // Relations
+  documents       Document[]
+  emails          Email[]
+  activities      Activity[]
+  parties         Party[]
+  mediationSessions MediationSession[]
+
+  @@index([caseNumber])
+  @@index([status])
+  @@index([nucleus])
+  @@index([assignedToId])
+  @@index([createdById])
+  @@index([createdAt])
+}
+
+model Party {
+  id              String      @id @default(cuid())
+  caseId          String
+  case            Case        @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  type            PartyType
+  name            String
+  email           String?
+  phone           String?
+  cpf             String?
+  address         String?
+
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  @@index([caseId])
+  @@index([type])
+}
+
+model Document {
+  id            String        @id @default(cuid())
+  caseId        String
+  case          Case          @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  name          String
+  type          DocumentType
+  description   String?
+
+  // Blob storage
+  blobUrl       String
+  blobKey       String
+  mimeType      String
+  sizeBytes     Int
+  version       Int           @default(1)
+
+  // Previous version (for versioning)
+  previousVersionId String?   @unique
+  previousVersion   Document? @relation("DocumentVersions", fields: [previousVersionId], references: [id])
+  nextVersion       Document? @relation("DocumentVersions")
+
+  uploadedById  String
+  uploadedBy    User          @relation(fields: [uploadedById], references: [id])
+
+  createdAt     DateTime      @default(now())
+
+  @@index([caseId])
+  @@index([type])
+  @@index([uploadedById])
+}
+
+model Email {
+  id            String        @id @default(cuid())
+  caseId        String?
+  case          Case?         @relation(fields: [caseId], references: [id])
+
+  // SQLite doesn't support arrays - store as JSON string
+  toEmails      String        // JSON array of email addresses
+  ccEmails      String?       // JSON array of email addresses
+  subject       String
+  bodyHtml      String
+  bodyText      String?
+  status        EmailStatus   @default(DRAFT)
+
+  // Resend integration
+  resendId      String?
+  sentAt        DateTime?
+  deliveredAt   DateTime?
+  openedAt      DateTime?
+  failedAt      DateTime?
+  errorMessage  String?
+
+  // Template used (if any)
+  templateId    String?
+  template      EmailTemplate? @relation(fields: [templateId], references: [id])
+
+  sentById      String
+  sentBy        User          @relation(fields: [sentById], references: [id])
+
+  createdAt     DateTime      @default(now())
+
+  @@index([caseId])
+  @@index([status])
+  @@index([sentById])
+  @@index([sentAt])
+}
+
+model EmailTemplate {
+  id          String    @id @default(cuid())
+  name        String
+  subject     String
+  bodyHtml    String
+  bodyText    String?
+  description String?
+
+  // Variables available in template (JSON string instead of array for SQLite)
+  variablesJson String?   // JSON array of strings
+
+  isActive    Boolean   @default(true)
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  emails      Email[]
+
+  @@index([name])
+}
+
+model Activity {
+  id          String        @id @default(cuid())
+  type        ActivityType
+  description String
+  metadata    String?       // JSON stored as string for SQLite
+
+  userId      String?
+  user        User?         @relation(fields: [userId], references: [id])
+
+  caseId      String?
+  case        Case?         @relation(fields: [caseId], references: [id])
+
+  createdAt   DateTime      @default(now())
+
+  @@index([type])
+  @@index([userId])
+  @@index([caseId])
+  @@index([createdAt])
+}
+
+model MediationSession {
+  id            String              @id @default(cuid())
+  caseId        String
+  case          Case                @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  sessionDate   DateTime
+  duration      Int                 // Duration in minutes
+  location      String?             // Physical location or video call link
+  type          MediationSessionType @default(JOINT)
+  status        SessionStatus       @default(SCHEDULED)
+
+  notes         String?
+  outcome       String?
+
+  conductedById String?
+  conductedBy   User?               @relation(fields: [conductedById], references: [id])
+
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  @@index([caseId])
+  @@index([sessionDate])
+  @@index([conductedById])
+  @@index([status])
+}
