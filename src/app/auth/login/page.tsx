@@ -106,10 +106,7 @@ function LoginForm() {
           </div>
         </form>
 
-        <div className="mt-4 text-center text-xs text-gray-500">
-          <p>Credenciais padrão para desenvolvimento:</p>
-          <p className="mt-1 font-mono">admin@pacifique.com.br / admin123</p>
-        </div>
+
       </div>
     </div>
   );
