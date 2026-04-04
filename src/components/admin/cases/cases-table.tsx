@@ -5,7 +5,7 @@ import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { Search, Loader2 } from 'lucide-react';
-import { STATUS_LABELS, STATUS_COLORS, NUCLEUS_LABELS } from '@/lib/case-utils';
+import { STATUS_LABELS, STATUS_COLORS, NUCLEUS_LABELS } from '@/lib/case-constants';
 import { CaseFilters } from './case-filters';
 import { useDebounce } from '@/lib/hooks/use-debounce';
 

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { Filter, X } from 'lucide-react';
-import { STATUS_LABELS, NUCLEUS_LABELS } from '@/lib/case-utils';
+import { STATUS_LABELS, NUCLEUS_LABELS } from '@/lib/case-constants';
 
 interface User {
   id: string;

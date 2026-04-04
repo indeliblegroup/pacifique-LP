@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { NUCLEUS_LABELS } from '@/lib/case-utils';
+import { NUCLEUS_LABELS } from '@/lib/case-constants';
 
 interface CaseFormProps {
   caseData?: {
