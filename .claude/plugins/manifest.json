@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "pacifique-agent-dev-kit",
+  "version": "0.1.0",
+  "description": "Agent Development Kit for the PACIFIQUE! repository — bundles skills, subagents and hooks tailored to the chamber's domain (conciliacao, mediacao, negociacao) and to the Next.js + Prisma + NextAuth stack.",
+  "authors": [
+    {
+      "name": "PACIFIQUE!",
+      "url": "https://pacifique.com.br"
+    }
+  ],
+  "license": "UNLICENSED",
+  "contents": {
+    "skills": [
+      {
+        "name": "method-routing",
+        "path": "../skills/method-routing/SKILL.md",
+        "summary": "Classifica conflito em conciliacao | mediacao | negociacao."
+      },
+      {
+        "name": "acordo-drafter",
+        "path": "../skills/acordo-drafter/SKILL.md",
+        "summary": "Gera minutas de Termo de Acordo, Termo Negativo e Carta Convite (rascunho)."
+      },
+      {
+        "name": "legal-citations",
+        "path": "../skills/legal-citations/SKILL.md",
+        "summary": "Repositorio verificado de citacoes legais (Lei 13.140, CPC, Res. CNJ 125, Res. TJPE 410, CDC, LGPD)."
+      },
+      {
+        "name": "section-builder",
+        "path": "../skills/section-builder/SKILL.md",
+        "summary": "Cria nova secao da landing seguindo SectionWrapper + constants.ts."
+      },
+      {
+        "name": "lgpd-checklist",
+        "path": "../skills/lgpd-checklist/SKILL.md",
+        "summary": "Auditoria LGPD para features que tocam dados pessoais."
+      }
+    ],
+    "agents": [
+      {
+        "name": "case-intake-analyst",
+        "path": "../agents/case-intake-analyst.md",
+        "summary": "Analisa relato de conflito e produz classificacao + roteamento."
+      },
+      {
+        "name": "legal-reviewer",
+        "path": "../agents/legal-reviewer.md",
+        "summary": "Revisa documento ou copy contra o arcabouco legal."
+      },
+      {
+        "name": "code-reviewer",
+        "path": "../agents/code-reviewer.md",
+        "summary": "Revisa diff contra convencoes do CLAUDE.md."
+      },
+      {
+        "name": "explorer",
+        "path": "../agents/explorer.md",
+        "summary": "Mapeia areas desconhecidas da base de codigo."
+      }
+    ],
+    "hooks": [
+      {
+        "event": "SessionStart",
+        "script": "../hooks/session-start.sh",
+        "summary": "Mostra branch, commits recentes, planning state e regras de dominio."
+      },
+      {
+        "event": "PreToolUse",
+        "matcher": "Bash",
+        "script": "../hooks/pre-tool-use.sh",
+        "summary": "Bloqueia comandos destrutivos (rm -rf /, force-push main, prisma migrate reset, deploys de prod)."
+      },
+      {
+        "event": "PostToolUse",
+        "matcher": "Edit|Write|MultiEdit",
+        "script": "../hooks/post-tool-use.sh",
+        "summary": "Roda eslint nos arquivos editados em src/ e avisa quando schema.prisma mudar."
+      }
+    ]
+  },
+  "compatibility": {
+    "requires": [
+      "node>=20",
+      "pnpm>=9",
+      "claude-code"
+    ]
+  }
+}

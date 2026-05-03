@@ -6,7 +6,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **PACIFIQUE!** e uma Camara Privada de Conciliacao e Mediacao sediada em Recife-PE (CNPJ: 65.218.388/0001-47).
 
-Este repositorio contem o website institucional e landing page da PACIFIQUE!, construido como uma aplicacao Next.js estatica (single-page) com foco em conversao via WhatsApp.
+Este repositorio contem:
+
+1. **Landing page institucional** (rota `/`) — site de conversao para WhatsApp.
+2. **Pagina de equipe** (rota `/equipe`) — biografias dos fundadores.
+3. **Backoffice operacional** (`/admin/*`) — sistema autenticado para gestao de casos, partes, sessoes de mediacao, documentos, emails, templates, calendario, usuarios e auditoria.
+4. **API REST** (`/api/*`) — endpoints autenticados que sustentam o backoffice (cases, parties, sessions, documents, emails, users, search, audit, upload).
+
+> **Nota historica:** versoes anteriores deste documento descreviam apenas a landing page estatica. O escopo cresceu para incluir backoffice + APIs autenticadas com Prisma/PostgreSQL. Mantenha este documento alinhado com o codigo real.
 
 ---
 
@@ -19,6 +26,12 @@ Este repositorio contem o website institucional e landing page da PACIFIQUE!, co
 - **Gerenciador de pacotes:** pnpm
 - **Icones:** lucide-react
 - **Fonts:** next/font (Inter + Merriweather)
+- **Banco de dados:** PostgreSQL via Prisma 7 (`@prisma/adapter-pg`)
+- **Autenticacao:** NextAuth v5 (beta) com provider Credentials + bcryptjs
+- **Email transacional:** Resend (`src/lib/email.ts`)
+- **Storage de arquivos:** Vercel Blob (`src/lib/blob.ts`)
+- **Validacao:** Zod (`src/lib/validations.ts`)
+- **Charts (admin):** Recharts
 
 ---
 
@@ -28,7 +41,7 @@ Este repositorio contem o website institucional e landing page da PACIFIQUE!, co
 # Desenvolvimento local (porta 3000)
 pnpm dev
 
-# Build de producao (gera static export)
+# Build de producao (executa prisma generate + next build)
 pnpm build
 
 # Rodar producao localmente
@@ -36,6 +49,17 @@ pnpm start
 
 # Lint
 pnpm lint
+
+# Migrations Prisma
+pnpm prisma migrate dev      # cria nova migration em dev
+pnpm prisma migrate deploy   # aplica migrations em prod
+pnpm prisma generate         # regera client (roda automaticamente em postinstall)
+pnpm prisma studio           # GUI para inspecionar dados
+pnpm prisma db seed          # roda prisma/seed.ts
+
+# Deploy (Vercel)
+pnpm deploy                  # vercel --prod
+pnpm redeploy                # commit vazio + push para main (gatilho de redeploy)
 ```
 
 ---
@@ -46,33 +70,97 @@ pnpm lint
 
 ```
 src/
-├── app/                    # Next.js App Router
-│   ├── layout.tsx          # Root layout (fonts, metadata, HTML lang)
-│   ├── page.tsx            # Home page (single-page landing)
-│   ├── globals.css         # Tailwind config + design tokens
-│   └── not-found.tsx       # 404 page
+├── app/                          # Next.js App Router
+│   ├── layout.tsx                # Root layout (fonts, metadata, HTML lang)
+│   ├── page.tsx                  # Landing (single-page)
+│   ├── globals.css               # Tailwind config + design tokens
+│   ├── not-found.tsx             # 404 page
+│   ├── equipe/                   # Pagina publica /equipe
+│   ├── auth/                     # /auth/login, /auth/error (NextAuth)
+│   ├── admin/                    # Backoffice autenticado (layout + 17 paginas)
+│   │   ├── layout.tsx            # Sidebar + header + session provider
+│   │   ├── page.tsx              # Dashboard com analytics
+│   │   ├── cases/                # CRUD de casos
+│   │   ├── calendar/             # Agendamento de sessoes
+│   │   ├── documents/            # Documentos (Vercel Blob)
+│   │   ├── emails/               # Composer + templates (Resend)
+│   │   ├── users/                # Gestao de usuarios
+│   │   ├── audit/                # Audit log
+│   │   └── profile/              # Perfil + senha
+│   └── api/                      # API REST autenticada
+│       ├── auth/[...nextauth]/   # Handler NextAuth
+│       ├── cases/                # CRUD de casos
+│       ├── parties/              # CRUD de partes
+│       ├── sessions/             # CRUD de sessoes (+ upcoming)
+│       ├── documents/            # CRUD + upload
+│       ├── emails/               # Envio + templates
+│       ├── users/                # CRUD + me + senha
+│       ├── search/               # Busca global
+│       ├── audit/                # Audit log
+│       └── upload/               # Upload de arquivos
 ├── components/
-│   ├── navbar.tsx          # Top navigation (sticky)
-│   ├── whatsapp-fab.tsx    # Floating action button (WhatsApp CTA)
-│   ├── sections/           # Full-width page sections
-│   │   ├── hero.tsx
-│   │   ├── services.tsx
-│   │   ├── nuclei.tsx
-│   │   ├── team.tsx
-│   │   ├── legal-sources.tsx
-│   │   ├── advantages.tsx
-│   │   ├── process-flow.tsx
-│   │   ├── comparison.tsx
-│   │   ├── faq.tsx
-│   │   └── footer.tsx
-│   └── ui/                 # Reusable UI primitives
-│       ├── section-wrapper.tsx
-│       ├── card.tsx
-│       ├── badge.tsx
-│       └── icon-circle.tsx
-└── lib/
-    └── constants.ts        # All content data, navigation, nuclei, team, FAQ
+│   ├── navbar.tsx                # Top navigation (publico)
+│   ├── whatsapp-fab.tsx          # Floating action button (WhatsApp)
+│   ├── sections/                 # Secoes da landing page
+│   │   ├── hero.tsx, services.tsx, nuclei.tsx, team.tsx,
+│   │   ├── legal-sources.tsx, advantages.tsx, process-flow.tsx,
+│   │   ├── comparison.tsx, faq.tsx, footer.tsx, join-team.tsx
+│   ├── admin/                    # Componentes do backoffice
+│   │   ├── layout/               # sidebar, header, global-search
+│   │   ├── cases/                # forms, filters, tabela, lista
+│   │   ├── calendar/             # grid, session-form, session-list
+│   │   ├── documents/            # upload, lista
+│   │   ├── emails/               # composer, lista
+│   │   ├── parties/              # form, lista
+│   │   ├── users/                # form, lista
+│   │   ├── profile/              # editar, alterar senha
+│   │   ├── dashboard/            # analytics-charts (Recharts)
+│   │   ├── shared/               # pagination
+│   │   └── providers/            # session-provider (NextAuth)
+│   └── ui/                       # Primitivas (section-wrapper, card, badge, icon-circle)
+├── lib/
+│   ├── constants.ts              # Conteudo da landing (nucleos, equipe, FAQ, nav)
+│   ├── auth.ts                   # NextAuth config (Credentials + bcrypt)
+│   ├── auth-helpers.ts           # Helpers de sessao em server components
+│   ├── permissions.ts            # RBAC (ADMIN | LAWYER | CONCILIATOR)
+│   ├── prisma.ts                 # Singleton do PrismaClient
+│   ├── blob.ts                   # Vercel Blob (upload/delete)
+│   ├── email.ts                  # Resend (envio + templates)
+│   ├── validations.ts            # Schemas Zod
+│   ├── case-constants.ts         # Enums e labels (CaseStatus, CaseNucleus, etc.)
+│   ├── case-utils.ts             # Helpers de caso
+│   ├── session-utils.ts          # Helpers de sessao
+│   ├── activity-utils.ts         # Helpers de audit log
+│   ├── cpf-cnpj-utils.ts         # Validacao + formatacao de CPF/CNPJ
+│   └── hooks/use-debounce.ts
+├── middleware.ts                 # Protege /admin e /api/{cases,documents,emails,users}
+└── types/next-auth.d.ts          # Augment dos tipos NextAuth (id, role)
+
+prisma/
+├── schema.prisma                 # Modelo: User, Case, Party, MediationSession, Document, Email, EmailTemplate, Activity, Session
+├── migrations/                   # init + add_calendar_system
+└── seed.ts                       # Seed inicial (executado por `pnpm prisma db seed`)
 ```
+
+### Modelo de Dominio (Prisma)
+
+Modelos principais e enums em `prisma/schema.prisma`:
+
+- **User** — `role: UserRole` (ADMIN | LAWYER | CONCILIATOR), `status: UserStatus` (INVITED | ACTIVE | INACTIVE), `passwordHash` opcional.
+- **Case** — caso de mediacao/conciliacao, com `nucleus: CaseNucleus`, `status: CaseStatus` (DRAFT → INVITE_SENT → INVITE_ACCEPTED → INTERVIEW_PHASE → SESSION_SCHEDULED → IN_MEDIATION → AGREEMENT_REACHED | NEGATIVE_TERM → CLOSED → ARCHIVED), `assignedTo` e `createdBy` em `User`.
+- **Party** — parte requerente ou requerida, vinculada a um Case (cascade delete).
+- **MediationSession** — sessao agendada, com `type: MediationSessionType` (JOINT | INDIVIDUAL_REQUESTING | INDIVIDUAL_REQUESTED), `status: SessionStatus`, `conductedBy` opcional.
+- **Document** — arquivo no Vercel Blob, com `type: DocumentType`, versionamento via `previousVersionId`.
+- **Email / EmailTemplate** — historico de envios via Resend, com status (DRAFT | SENT | DELIVERED | OPENED | FAILED).
+- **Activity** — audit log com `type: ActivityType`.
+- **Session** (NextAuth) — token de sessao por usuario.
+
+### Autenticacao e Autorizacao
+
+- **NextAuth v5** com provider Credentials (email + senha bcrypt), strategy JWT, sessao de 30 dias (`src/lib/auth.ts`).
+- **Middleware** (`src/middleware.ts`) protege `/admin/*` (redirect para `/auth/login`) e `/api/{cases,documents,emails,users}/*` (retorna 401).
+- **RBAC** em `src/lib/permissions.ts` com helpers `canManageUsers`, `canCreateCases`, `canEditCase(role, ownerId, userId)`, `canDeleteCases`, `canManageTemplates`, `canViewAuditLogs`.
+- Token JWT enriquecido com `id` e `role` via callbacks `jwt`/`session` (tipos em `src/types/next-auth.d.ts`).
 
 ### Design Tokens (Tailwind @theme)
 
@@ -249,10 +337,14 @@ Qualquer funcionalidade que colete dados pessoais deve:
 Resolucao pacifica de conflitos com excelencia, seguranca juridica e celeridade.
 
 ### Base Legal
-- Resolucao n. 125/2010 do CNJ — Politica Nacional de conflitos
-- Resolucao n. 410/2018 do TJPE — Credenciamento de camaras privadas (PE)
-- Lei n. 13.140/2015 — Lei de Mediacao
-- CPC/2015, art. 3, par. 2 e 3 — Autocomposicao
+- **Lei n. 13.140/2015** — Lei de Mediacao (procedimento, principios, sigilo, condicao executiva do acordo).
+- **CPC/2015**:
+  - **Art. 3, §2 e §3** — Estimulo a autocomposicao por juizes, advogados, defensores, MP.
+  - **Art. 165** — Conciliadores e mediadores; conciliador atua de forma mais ativa e pode sugerir solucoes.
+  - **Art. 334** — Audiencia obrigatoria de conciliacao/mediacao no inicio do processo.
+- **Resolucao n. 125/2010 do CNJ** — Politica Nacional de tratamento adequado de conflitos; criou os CEJUSCs.
+- **Resolucao n. 410/2018 do TJPE** — Credenciamento de camaras privadas em Pernambuco.
+- **CDC (Lei 8.078/1990)** — Aplicavel a conflitos consumeristas (Consumidor Aereo, Consumidor Bancario).
 
 ### Nucleos de Atuacao (7 areas)
 1. Consumidor Aereo
@@ -268,6 +360,85 @@ Resolucao pacifica de conflitos com excelencia, seguranca juridica e celeridade.
 - Amanda Ledo (Conciliadora Responsavel)
 - Rui Manuel Costa (Diretor de Operacoes)
 - Icaro Sampaio (Diretor de Tecnologia)
+
+---
+
+## Dominio: Metodos Adequados de Resolucao de Conflitos
+
+A PACIFIQUE! oferece tres metodos consensuais distintos. **O grande diferencial estrategico da camara nao e apenas executar os procedimentos, mas avaliar previamente cada conflito e direciona-lo para o metodo mais adequado.** Confundir os tres e a falha mais comum no mercado e o erro mais caro a se cometer no produto.
+
+### Quadro comparativo (referencia rapida)
+
+| Eixo                       | Conciliacao                                         | Negociacao                                       | Mediacao                                                   |
+|----------------------------|-----------------------------------------------------|--------------------------------------------------|------------------------------------------------------------|
+| **Postura do terceiro**    | Ativo — pode sugerir solucoes, propor acordos       | Tecnico-estrategico — formula propostas, avalia cenarios | Facilitador — NAO sugere acordo, conduz dialogo         |
+| **Base legal**             | CPC arts. 3§3, 165, 334 + Res. CNJ 125/2010         | Sem lei propria (autonomia da vontade, contrato) | Lei 13.140/2015 (lei propria, regime fechado)              |
+| **Sigilo / confidencialidade** | Pratica recomendada, nao garantia legal         | Apenas se contratualmente convencionado          | **Principio legal** (art. 2-VII e arts. 30-31 da Lei 13.140) |
+| **Impedimento posterior**  | Avaliar caso a caso                                 | Em regra, sem impedimento profissional           | Mediador fica impedido de atuar como advogado na materia   |
+| **Tipo de conflito ideal** | Objetivo, transacional, solucao rapida              | Indenizatorio, contratual, B2B, grandes players  | Relacional, continuado, complexo, sigiloso                 |
+| **Casos tipicos**          | Dividas bancarias, cia aerea, consumo               | Indenizacoes, parcelamentos CNPJ, bancarios      | Familia, sucessao com gestao patrimonial, societario, casais |
+| **Escala / IA**            | Alta escala viavel — IA pode estruturar propostas com validacao do conciliador | Alta flexibilidade — IA apoia analise e cenarios | Limitada — Lei exige conducao humana; IA so como suporte   |
+
+### Conciliacao
+
+- **Definicao operacional:** terceiro facilita e direciona a conversa, podendo propor acordos com parametros (valores, prazos, formas de pagamento). Decisao final sempre das partes; conciliador nao impoe, nao pressiona, nao decide.
+- **Quando indicar:** conflitos objetivos sem componente relacional forte, demanda de solucao rapida, ausencia de necessidade legal de sigilo. Bancario, aereo, consumo em geral.
+- **Oportunidade de produto:** este e o metodo mais escalavel para a plataforma. IA pode coletar dados do conflito, estruturar propostas iniciais e enviar as partes; o conciliador valida e formaliza. Diferencial vs. PROCON e CEJUSCs: ambiente menos hostil, traducao de linguagem tecnica, conducao estrategica, fluxo operacional simples.
+
+### Negociacao
+
+- **Definicao operacional:** metodo consensual com maior liberdade procedimental e atuacao tecnica incisiva (formulacao de propostas, analise de cenarios, mitigacao de risco, criacao de zonas de ganho mutuo).
+- **Quando indicar:** conflitos de interesse economico/contratual/indenizatorio onde nao ha relacao continuada a preservar. Grandes players economicos, mutiroes B2B/B2C, bancarios, indenizacoes.
+- **Sigilo:** nao automatico — incluir clausula de confidencialidade quando relevante.
+- **Vantagem operacional:** sem o regime fechado da Lei 13.140, permite atuacao mais agil e adaptavel.
+
+### Mediacao
+
+- **Definicao operacional:** mediador atua **estritamente como facilitador do dialogo**; NAO sugere acordo. Decisao construida pelas partes.
+- **Principios (Lei 13.140/2015, art. 2):** imparcialidade, isonomia entre as partes, oralidade, informalidade, autonomia da vontade, busca do consenso, **confidencialidade**, boa-fe.
+- **Quando indicar:** conflitos relacionais, complexos, com necessidade de preservacao de vinculo continuado, ou quando o sigilo legal e o motivo central da escolha (societario de capital aberto, casais, irmaos em sucessao com gestao patrimonial conjunta).
+- **Impedimento (art. 5):** aplicam-se ao mediador as hipoteses de impedimento e suspeicao do juiz.
+  - Amizade intima, relacao profissional atual, interesse direto/indireto e historico de conflito **vedam** atuacao.
+  - Amizade nao intima nao e automaticamente proibida — exige revelacao expressa e consentimento registrado de ambas as partes.
+- **Confidencialidade:** principio **legal** (art. 2-VII e arts. 30-31), nao convencional. Nao reduzir nem reformular como "boa pratica".
+- **Isonomia:** se uma das partes nao tem advogado, o mediador deve informar expressamente o direito de constituir advogado e oferecer reagendamento. A parte pode optar por prosseguir sem prejuizo da validade.
+
+### IA + Conducao Humana (Lei 13.140/2015)
+
+A Lei 13.140/2015 exige **conducao humana** do procedimento de mediacao. Tecnologia e permitida como suporte. Diretrizes operacionais para qualquer feature do produto que envolva IA:
+
+- **Pre-mediacao** — coleta de dados, educacao da parte sobre o procedimento, mapeamento inicial: **OK**.
+- **Sugestao de perguntas ao mediador** durante a sessao: **OK**, com mediador no comando.
+- **Organizacao de falas e identificacao de pontos de consenso**: **OK** como apoio.
+- **Geracao de minutas de acordo e resumos**: **OK**, com revisao e validacao humana obrigatoria antes da formalizacao.
+- **Decisao automatizada / acordo sem validacao humana**: **NUNCA**.
+- **Substituicao do mediador na conducao da sessao**: **NUNCA**.
+
+Para **conciliacao**, o espaco de IA e maior: estruturar propostas iniciais com base em dados do conflito e enviar as partes e aceitavel, desde que haja anuencia e validacao formal do conciliador antes de formalizar.
+
+Para **negociacao**, ha maior liberdade — IA pode apoiar leitura estrategica, identificacao de ZOPA, construcao de propostas e analise de cenarios.
+
+Sempre que uma feature for proposta, registrar explicitamente: (1) qual metodo se aplica, (2) onde a IA atua, (3) onde a validacao humana entra, (4) base legal aplicavel.
+
+### Roteamento de Conflitos (avaliacao previa)
+
+Antes de iniciar qualquer procedimento, avaliar:
+
+1. **Existe relacao continuada entre as partes?** Sim → mediacao.
+2. **Sigilo e requisito central?** Sim → mediacao.
+3. **Conflito e objetivo, transacional, com solucao quantificavel (valor, prazo)?** Sim → conciliacao.
+4. **Conflito envolve grande player economico, sem relacao a preservar, com margem para composicao estrategica?** → negociacao.
+5. **Conflito sera levado a Judiciario?** Convenio TJPE traz forca executiva ao acordo homologado.
+
+Erros frequentes de roteamento (a evitar no produto):
+- Tratar conflito relacional complexo (familia, societario) como conciliacao rapida — perde-se a profundidade necessaria.
+- Tratar conflito objetivo (cia aerea, divida) como mediacao — adiciona formalidade desnecessaria e desestimula o acordo.
+
+### Posicionamento Estrategico
+
+- **Convenio TJPE** — legitimidade institucional, reconhecimento do Judiciario, forca executiva do acordo (titulo executivo extrajudicial, art. 20, Lei 13.140/2015).
+- **Camara virtual estruturada** — mercado pouco explorado em PE; pedidos de credenciamento da OAB e UNICAP no TJPE em tramitacao. Sem vedacao legal a conciliacao virtual.
+- **Inteligencia de dados (consumerista)** — taxa de acordo por tipo de conflito, tempo medio de resolucao, principais causas-raiz, reincidencia por area/empresa. Diferencial vs. PROCON.
 
 ---
 
@@ -298,3 +469,26 @@ Resolucao pacifica de conflitos com excelencia, seguranca juridica e celeridade.
 - **Core Web Vitals:** LCP < 2.5s, FID < 100ms, CLS < 0.1
 - **Imagens:** Usar `next/image` com WebP/AVIF, lazy loading abaixo do fold
 - **Fontes:** `next/font` com `display: swap` (ja configurado)
+
+---
+
+## Infraestrutura Claude Code (5-Layer Stack)
+
+Este repositorio adota o "Agent Development Kit" — uma estrutura em 5 camadas que organiza memoria, conhecimento, guardrails, delegacao e distribuicao para sessoes do Claude Code.
+
+| Camada | Localizacao                       | Proposito                                                |
+|--------|-----------------------------------|----------------------------------------------------------|
+| L1 — Memory      | `CLAUDE.md` (este arquivo)         | Constituicao do agente; sempre carregado.                |
+| L2 — Knowledge   | `.claude/skills/`                  | Skills modulares, invocadas sob demanda por descricao.   |
+| L3 — Guardrails  | `.claude/settings.json` + `.claude/hooks/` | Hooks deterministicos em eventos do agente.       |
+| L4 — Delegation  | `.claude/agents/`                  | Subagents com contexto isolado, retornam apenas resultado. |
+| L5 — Distribution| `.claude/plugins/manifest.json`    | Bundle de skills + agents + hooks + commands.            |
+
+Para detalhes, ver `.claude/README.md`.
+
+### Quando consultar cada camada
+
+- **Mudou regra de codigo / convencao / dominio?** → atualizar este `CLAUDE.md` (L1).
+- **Tarefa repetivel com inputs/outputs claros (ex: roteamento de metodo, geracao de minuta)?** → criar skill em `.claude/skills/` (L2).
+- **Comportamento deve ser garantido independentemente do prompt (ex: bloquear `rm -rf`, rodar lint pos-edit)?** → hook em `.claude/settings.json` (L3).
+- **Trabalho extenso que polui o contexto (ex: revisao de codigo, exploracao da base)?** → subagent em `.claude/agents/` (L4).
